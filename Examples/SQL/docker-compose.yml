@@ -19,6 +19,17 @@ services:
     networks:
       - internal
 
+  app:
+    container_name: 'books.app'
+    build:
+      context: ../
+      dockerfile: books.dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - internal
+
 networks:
   internal:
-    driver: bridge  
+    driver: bridge
+    
