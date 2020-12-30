@@ -1,22 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Database.EFCore;
 using Database.EFCore.Contracts;
 using Database.EFCore.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace WebApplication.EFCore
+namespace WebApp.EFCore
 {
     public class Startup
     {
@@ -31,10 +25,10 @@ namespace WebApplication.EFCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddScoped<IWeatherDataAccess, WeatherDataAccess>();
+            services.AddScoped<IBooksDataAccess, BooksDataAccess>();
             services.AddAutoMapper(typeof(MappingProfile));
-            services.AddDbContext<ExampleContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ExampleDbContext")));
+            services.AddDbContext<BookContext>(options =>
+                options.UseNpgsql("Host=localhost;Port=5432;Database=postgres;User ID=postgres;Password=secretpass;"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +46,15 @@ namespace WebApplication.EFCore
             //app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                Console.WriteLine("trying to migrate...");
+                var context = serviceScope.ServiceProvider.GetRequiredService<BookContext>();
+                context.Database.Migrate();
+                Console.WriteLine("done.");
+            }
         }
     }
 }

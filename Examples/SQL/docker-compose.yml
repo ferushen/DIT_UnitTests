@@ -14,11 +14,11 @@ services:
     volumes:
       - /usr/postgres/data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_PASSWORD=secretpass
       - POSTGRES_MULTIPLE_DATABASES=exampledb
     networks:
       - internal
 
 networks:
   internal:
-    driver: bridge
+    driver: bridge  

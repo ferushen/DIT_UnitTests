@@ -1,19 +1,25 @@
 using AutoMapper;
 using Database.EFCore.Entities;
 
-namespace WebApplication.EFCore
+namespace WebApp.EFCore
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            this.CreateMap<WeatherEntity, WeatherForecast>()
+            this.CreateMap<BookEntity, Books>()
                 .ForMember(
-                    dst => dst.Summary, 
-                    opt => opt.MapFrom(src => src.Summary.Code))
+                    dst => dst.id, 
+                    opt => opt.MapFrom(src => src.id))
                 .ForMember(
-                    dst => dst.TemperatureC,
-                    opt => opt.MapFrom(src => src.Temperature));
+                    dst => dst.name,
+                    opt => opt.MapFrom(src => src.name))
+                .ForMember(
+                    dst => dst.author,
+                    opt => opt.MapFrom(src => src.author))
+                .ForMember(
+                    dst => dst.year,
+                    opt => opt.MapFrom(src => src.year));                
         }
     }
 }
